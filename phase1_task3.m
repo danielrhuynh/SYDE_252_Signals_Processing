@@ -34,7 +34,7 @@ end
 
 % 3.7
 FREQ = 1000;
-cosSignal = sin(2 * pi * FREQ * t);
+cosSignal = cos(2 * pi * FREQ * t);
 
 sound(cosSignal, Fs);
 
@@ -44,10 +44,10 @@ sound(cosSignal, Fs);
 % title('Cosine Waveform (1 kHz)');
 
 % Zooming in
-plot(t, cosSignal);
-xlabel('Time (s)');
-ylabel('Amplitude');
-title('Zoomed-in Cosine Waveform (1 kHz)');
-xlim([0, 2 / 1000]);  % Show only two cycles (2 ms)
+% plot(t, cosSignal);
+% xlabel('Time (s)');
+% ylabel('Amplitude');
+% title('Zoomed-in Cosine Waveform (1 kHz)');
+% xlim([0, 2 / 1000]);  % Show only two cycles (2 ms)
 
 % TODO: PUT ALL OF THIS IN A FUNCTION
