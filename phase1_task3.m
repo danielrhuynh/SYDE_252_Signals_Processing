@@ -15,3 +15,9 @@ end
 % 3.3
 sound(monoSignal, Fs);
 
+% 3.4
+t = (0:(length(y) - 1)) / Fs;  % Time vector in seconds
+plot(t, y);
+xlabel('Time (s)');
+ylabel('Amplitude');
+title('Audio Waveform of test.wav');
