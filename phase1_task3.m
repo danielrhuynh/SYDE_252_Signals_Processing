@@ -1,5 +1,5 @@
 % 3.1
-filename = 'test.wav';
+filename = 'sample_1.mp3';
 [y, Fs] = audioread(filename); % Where y and Fs are the audio data and sampling frequency respectively
 
 % 3.2
@@ -16,8 +16,30 @@ end
 sound(monoSignal, Fs);
 
 % 3.4
+% Write to audio file
+audiowrite('output.mp3', monoSignal, Fs);
+
+% 3.5
 t = (0:(length(y) - 1)) / Fs;  % Time vector in seconds
 plot(t, y);
 xlabel('Time (s)');
 ylabel('Amplitude');
 title('Audio Waveform of test.wav');
+
+% 3.6
+if Fs > 16000
+    y = resample(y, 16000, Fs);
+    Fs = 16000;
+end
+
+% 3.7
+FREQ = 1000;
+cosSignal = sin(2 * pi * FREQ * t);
+
+sound(cosSignal, Fs);
+plot(t, cosSignal);
+xlabel('Time (s)');
+ylabel('Amplitude');
+title('Cosine Waveform (1 kHz)');
+
+% TODO: PUT ALL OF THIS IN A FUNCTION
