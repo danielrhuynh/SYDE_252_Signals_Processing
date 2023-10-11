@@ -1,5 +1,11 @@
-[sample_1_mono, Fs] = signals_processing("sample_1.mp3");
+[sample1_mono, Fs] = signals_processing("sample1.mp3");
+[sample2_mono, Fs] = signals_processing("sample2.mp3");
+[sample3_mono, Fs] = signals_processing("sample3.mp3");
+[sample4_mono, Fs] = signals_processing("sample4.mp3");
 
 % 3.4
 % Write to audio file
-audiowrite('output.mp3', sample_1_mono, Fs);
+audiowrite('output1.mp3', sample1_mono, Fs);
+audiowrite('output2.mp3', sample2_mono, Fs);
+audiowrite('output3.mp3', sample3_mono, Fs);
+audiowrite('output4.mp3', sample4_mono, Fs);

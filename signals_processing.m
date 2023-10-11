@@ -16,9 +16,9 @@ function [monoSignal, Fs] = signals_processing(filename)
     sound(monoSignal, Fs);
 
     % 3.5
-    t = (0:(length(monoSignal) - 1)) / Fs;  % Time vector in seconds
+    t = (0:(length(monoSignal) - 1)) / Fs;  % Time vector in sample steps (sample numbers)
     plot(t, y);
-    xlabel('Time (s)');
+    xlabel('Time [s]');
     ylabel('Amplitude');
     title('Audio Waveform of ' + filename);
 
@@ -32,7 +32,7 @@ function [monoSignal, Fs] = signals_processing(filename)
     FREQ = 1000;
     cosSignal = cos(2 * pi * FREQ * t);
 
-    % sound(cosSignal, Fs);
+    sound(cosSignal, Fs);
 
     % plot(t, cosSignal);
     % xlabel('Time (s)');
@@ -40,10 +40,9 @@ function [monoSignal, Fs] = signals_processing(filename)
     % title('Cosine Waveform (1 kHz)');
 
     % Zooming in
-    % plot(t, cosSignal);
-    % xlabel('Time (s)');
-    % ylabel('Amplitude');
-    % title('Zoomed-in Cosine Waveform (1 kHz)');
-    % xlim([0, 2 / 1000]);  % Show only two cycles (2 ms)
-
+    plot(t, cosSignal);
+    xlabel('Time [s]');
+    ylabel('Amplitude');
+    title('Zoomed-in Cosine Waveform (1 kHz) of ' + filename);
+    xlim([0, 2 / 1000]);  % Show only two cycles (2 ms)
 end
