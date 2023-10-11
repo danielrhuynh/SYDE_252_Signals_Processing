@@ -50,4 +50,4 @@ sound(cosSignal, Fs);
 % title('Zoomed-in Cosine Waveform (1 kHz)');
 % xlim([0, 2 / 1000]);  % Show only two cycles (2 ms)
 
-% TODO: PUT ALL OF THIS IN A FUNCTION
+% TODO: PUT UP TO 3.6 IN A FUNCTION
