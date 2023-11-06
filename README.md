@@ -7,5 +7,5 @@ I think you need MATLAB 2023b to use the MATLAB engine API
 
 ## Setup
 Please setup your environment with the following before developing:
-* Setup your venv with `conda create -n NAME python=3.9`
+* Setup your venv with `conda create -n NAME python=3.9.18`
 * Install dependancies with `cd ./src && pip install -r requirements.txt`
