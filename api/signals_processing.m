@@ -20,7 +20,7 @@ function [monoSignal, Fs] = signals_processing(filename)
     plot(t, y);
     xlabel('Time [s]');
     ylabel('Amplitude');
-    title('Audio Waveform of ' + filename);
+    title(['Audio Waveform of ', filename]);
 
     % 3.6
     if Fs > 16000
