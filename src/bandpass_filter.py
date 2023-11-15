@@ -7,20 +7,22 @@ import sounddevice as sd
 eng = matlab.engine.start_matlab()
 
 # This is the sampling frequency we had from Phase 1
-fs = 16000  
+fs = 16000
 
 # Specified in Phase 2
 lowFreq = 100
+
 highFreq = 8000
 
 # Chosen from lectures
-NFrequencyBands = 8
+NFrequencyBands = 12
 
 # Create the edges of the frequency bands
 edges = []
 
-for i in np.arange(lowFreq, highFreq, (highFreq-lowFreq)/(NFrequencyBands+1)):
+for i in np.arange(lowFreq, highFreq, (highFreq-lowFreq)/(NFrequencyBands)):
     edges.append(i)
+edges.append(highFreq)
 
 filterBank = []
 
@@ -28,19 +30,23 @@ for i in range(NFrequencyBands):
     lowCutoff = edges[i]
     highCutoff = edges[i+1]
 
-    # This is the order for the FIR filter
+    # Needed to modify this according to Nyquist's theorem
+    if highCutoff == fs/2:
+        highCutoff *= 0.999
+
+    # This is the order for the FIR filter (odd for Type 1)
     taps = 101
 
-    bandpassFilter = firwin(numtaps=taps, cutoff=[lowCutoff, highCutoff], fs=fs)
-    z, p, a = tf2zpk(bandpassFilter, [1.0])
-    sos = zpk2sos(z, p, a)
-    filterBank.append(sos)
+    firCoeffs = firwin(numtaps=taps, cutoff=[lowCutoff, highCutoff], fs=fs)
+    z, p, a = tf2zpk(firCoeffs, [1.0])
+    secondOrderSections = zpk2sos(z, p, a)
+    filterBank.append(secondOrderSections)
 
-samplePath = "sample1.mp3"
+samplePath = "./samples/sample1.mp3"
 
-# Using MATLAB's python enginer
+# Using MATLAB's python engine to preprocess
 s = eng.genpath('api')
-d = eng.genpath('resources')
+d = eng.genpath('samples')
 eng.addpath(s,nargout=0)
 eng.addpath(d,nargout=0)
 [monoSignal, sampleFreq] = eng.signals_processing(samplePath, nargout=2)
@@ -57,10 +63,11 @@ plt.ylabel("Amplitude")
 plt.grid(True)
 
 # Plot filtered signals
-plt.figure(figsize=(12, 6))
 for i, filteredSignal in enumerate(filteredSample):
     plt.plot(t, filteredSignal)
-    plt.title(f'Band {i+1}: {edges[i]:.1f} - {edges[i+1]:.1f} Hz')
+    plt.title(f'Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+    plt.xlabel("Time [seconds]")
+    plt.ylabel("Amplitude")
     plt.grid(True)
     plt.tight_layout()
     plt.show()
