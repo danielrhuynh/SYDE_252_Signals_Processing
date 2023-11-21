@@ -57,7 +57,8 @@ We are using a FIR Filter for the following reasons:
     By doing so we get numerical stabillity leading to better control over  
     the filter's characteristics. This is important for high order filters where the poles  
     and zeroes are closesly spaced.  This is mainly black boxed thanks to scipy.
-
+## Rectifying Signals:
+    Process in which all the negative portions of the signal are eliminated. There are two types of rectification: half-wave and full-wave. In half-wave, only the positive portion of the signal remains, and the negative portions are clipped to zero. A full-wave rectifier inverts all the negative portions so that the entire signal has positive values.
 ### Conclusion
 Hopefully this provides enough context to understand the filter.  
 Ff course more research should be done for the report!
