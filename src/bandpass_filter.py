@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.signal import firwin, lfilter, sosfilt, tf2zpk, zpk2sos
+from scipy.signal import firwin, lfilter
 import matplotlib.pyplot  as plt
 import matlab.engine
 import sounddevice as sd
@@ -38,9 +38,7 @@ for i in range(NFrequencyBands):
     taps = 101
 
     firCoeffs = firwin(numtaps=taps, cutoff=[lowCutoff, highCutoff], fs=fs)
-    z, p, a = tf2zpk(firCoeffs, [1.0])
-    secondOrderSections = zpk2sos(z, p, a)
-    filterBank.append(secondOrderSections)
+    filterBank.append(firCoeffs)
 
 samplePath = "./samples/sample1.mp3"
 
@@ -51,7 +49,7 @@ eng.addpath(s,nargout=0)
 eng.addpath(d,nargout=0)
 [monoSignal, sampleFreq] = eng.signals_processing(samplePath, nargout=2)
 
-filteredSample = [sosfilt(bandpassFilter, monoSignal) for bandpassFilter in filterBank]
+filteredSample = [lfilter(bandpassFilter, [1.0], monoSignal) for bandpassFilter in filterBank]
 
 t = np.arange(len(monoSignal)) / sampleFreq
 
@@ -61,6 +59,7 @@ plt.title("Original Signal")
 plt.xlabel("Time [seconds]")
 plt.ylabel("Amplitude")
 plt.grid(True)
+plt.show()
 
 # Plot filtered signals
 for i, filteredSignal in enumerate(filteredSample):

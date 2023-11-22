@@ -13,7 +13,7 @@ function [monoSignal, Fs] = signals_processing(filename)
     end
 
     % 3.3
-    sound(monoSignal, Fs);
+    % sound(monoSignal, Fs);
 
     % 3.5
     t = (0:(length(monoSignal) - 1)) / Fs;  % Time vector in sample steps (sample numbers)
