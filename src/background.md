@@ -57,6 +57,19 @@ We are using a FIR Filter for the following reasons:
     By doing so we get numerical stabillity leading to better control over  
     the filter's characteristics. This is important for high order filters where the poles  
     and zeroes are closesly spaced.  This is mainly black boxed thanks to scipy.
+## lfilter
+    This applies a linear digital filter (FIR filter) to a signal along one-dimension.  
+[Docs](https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.lfilter.html)  
+[Maybe try looking around this book for FIR filters](https://flylib.com/books/en/2.729.1/chapter_five_finite_impulse_response_filters.html)  
+[Learn more about using convolution to apply filters](https://ccrma.stanford.edu/~jos/fp/Convolution_Representation_FIR_Filters.html)
+[Even more stuff about convolution](https://scipy-cookbook.readthedocs.io/items/ApplyFIRFilter.html)
+
+    This implements a linear, time-invariant filter given by:
+$$ H(z) = \frac{B(z)}{A(z)} = \frac{\sum_{i=0}^{M} b[i] z^{-i}}{\sum_{i=0}^{N} a[i] z^{-i}} $$
+    Where B and A are polynomial coefficients. You use convolution to apply a filter  
+    the impulse response in this case is the sequence of FIR coefficients and x(t) is the signal.
+
+
 
 ### Conclusion
 Hopefully this provides enough context to understand the filter.  
