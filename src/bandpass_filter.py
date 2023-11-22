@@ -6,25 +6,6 @@ import matplotlib.pyplot  as plt
 import matlab.engine
 import sounddevice as sd
 
-# def butter_lowpass_filter(data, cutoff, fs, order):
-#     normal_cutoff = cutoff / nyq
-#     # Get the filter coefficients 
-#     b, a = butter(order, normal_cutoff, btype='low', analog=False)
-#     y = filtfilt(b, a, data)
-#     return 5
-
-# def running_mean(x, windowSize):
-#    cumsum = np.cumsum(np.insert(x, 0, 0)) 
-#    return (cumsum[windowSize:] - cumsum[:-windowSize]) / windowSize 
-
-def lowpass(data: np.ndarray, cutoff: float, sample_rate: float, poles: int = 5):
-    sos = butter(poles, cutoff, 'lowpass', fs=sample_rate, output='sos')
-    filtered_data = sosfiltfilt(sos, data)
-    return filtered_data
-
-
-
-
 
 eng = matlab.engine.start_matlab()
 
@@ -63,7 +44,7 @@ for i in range(NFrequencyBands):
     firCoeffs = firwin(numtaps=taps, cutoff=[lowCutoff, highCutoff], fs=fs, pass_zero=False, window=('kaiser', 0.9))
     filterBank.append(firCoeffs)
 
-samplePath = "../samples/sample1.mp3"
+samplePath = "../samples/sample4.mp3"
 
 # Using MATLAB's python engine to preprocess
 s = eng.genpath('../api')
@@ -145,37 +126,66 @@ ax1.grid(alpha=.5, ls='--')
 ax2.plot(t, filtered)
 ax2.set_title("Low-Pass Filter (400 Hz)")
 ax2.grid(alpha=.5, ls='--')
+    row, col = divmod(i, 4)
+    axes[i].plot(t, filteredSignal)
+    axes[i].set_title(f'Filtered Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+    axes[i].set_xlabel("Time [seconds]")
+    axes[i].set_ylabel("Amplitude")
+    axes[i].grid(True)
 plt.tight_layout()
 plt.show()
 
-# N = int(np.sqrt(0.196201 + freqRatio**2) / freqRatio)
-# print(N)
-#filtered = running_mean(recFilteredSample[0], N)
-#filtered = [running_mean(signal, N) for signal in recFilteredSample]
+# Task 7: Rectify each band by taking the abs value of the signal for each band
+recFilteredSample = [abs(sample) for sample in filteredSample]
 
-# Filter requirements.
-# cutoff = 400      # desired cutoff frequency of the filter, Hz 
-# nyq = 0.5 * fs  # Nyquist Frequency
-# order = 2       # sin wave can be approx represented as quadratic
-# n = int(t * fs) # total number of samples
-# y = butter_lowpass_filter(recFilteredSample[0], cutoff, nyq, order)
-
-#envelopes = [lowpass_filter(rectifiedSignal, cutOffFrequency, sampleFreq) for rectifiedSignal in recFilteredSample]
-
-# Plot original rectified signals and their envelopes
-# for i, (rectifiedSignal, filtered) in enumerate(zip(recFilteredSample, filtered)):
-#     # Create a single subplot
-#     fig, ax = plt.subplots(figsize=(10, 6))
-#     # Plot rectified signal
-#     ax.plot(t, rectifiedSignal, label='Rectified Signal')
-#     ax.set_title(f'Rectified Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
-#     ax.set_xlabel("Time [seconds]")
-#     ax.set_ylabel("Amplitude")
-#     ax.grid(True)
-#     # Plot envelope on the same subplot
-#     ax.plot(t, filtered, color='orange', label='Envelope')
-#     ax.legend() 
+# Plot recFilteredSample signals
+# for i, rec in enumerate(recFilteredSample):
+#     plt.plot(t, rec)
+#     plt.title(f'Rectified Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+#     plt.xlabel("Time [seconds]")
+#     plt.ylabel("Amplitude")
+#     plt.grid(True)
 #     plt.tight_layout()
+#     plt.show()
+
+# Plot rectified signals all in the same figure
+fig, axes = plt.subplots(3, 4, figsize=(12, 8))
+axes = axes.flatten()
+for i, rectifiedSample in enumerate(recFilteredSample):
+    row, col = divmod(i, 4) 
+    axes[i].plot(t, rectifiedSample)
+    axes[i].set_title(f'Rectified Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+    axes[i].set_xlabel("Time [seconds]")
+    axes[i].set_ylabel("Amplitude")
+    axes[i].grid(True)
+plt.tight_layout()
+plt.show()
+
+# Task 8: Apply lowpass filter to recFilteredSample
+cutoffFrequency = 400
+envelope = [lfilter(*butter(4, cutoffFrequency / (fs / 2), btype='low', analog=False), sample) for sample in recFilteredSample]
+
+# Plot envelope signals
+for i, rec in enumerate(envelope):
+    plt.plot(t, rec)
+    plt.title(f'Lowpass Filter Rectified Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+    plt.xlabel("Time [seconds]")
+    plt.ylabel("Amplitude")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+# Plot a comparison of all the signals of each band
+# for i in range(NFrequencyBands):
+#     plt.figure()
+#     plt.plot(t, filteredSample[i], label='filteredSample')
+#     plt.plot(t, recFilteredSample[i], label='recFilteredSample')
+#     plt.plot(t, envelope[i], label='envelope')
+#     plt.title(f"Band {i + 1} Comparison")
+#     plt.xlabel("Time [seconds]")
+#     plt.ylabel("Amplitude")
+#     plt.legend()
+#     plt.grid(True)
 #     plt.show()
 
 compositeSignal = np.sum(filteredSample, axis=0)
@@ -184,8 +194,8 @@ compositeSignal = np.sum(filteredSample, axis=0)
 compositeSignal /= np.max(np.abs(compositeSignal))
                          
 # Playing the composite signal
-# print("Playing composite signal...")
-# sd.play(compositeSignal, sampleFreq)
-# sd.wait()
+print("Playing composite signal...")
+sd.play(compositeSignal, sampleFreq)
+sd.wait()
 
 eng.quit()
