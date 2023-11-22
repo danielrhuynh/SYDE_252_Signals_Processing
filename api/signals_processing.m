@@ -17,10 +17,10 @@ function [monoSignal, Fs] = signals_processing(filename)
 
     % 3.5
     t = (0:(length(monoSignal) - 1)) / Fs;  % Time vector in sample steps (sample numbers)
-    plot(t, y);
-    xlabel('Time [s]');
-    ylabel('Amplitude');
-    title(['Audio Waveform of ', filename]);
+    % plot(t, y);
+    % xlabel('Time [s]');
+    %ylabel('Amplitude');
+    % title(['Audio Waveform of ', filename]);
 
     % 3.6
     if Fs > 16000
