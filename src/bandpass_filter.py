@@ -71,9 +71,49 @@ t = np.arange(len(monoSignal)) / sampleFreq
 fig, axes = plt.subplots(3, 4, figsize=(12, 8))
 axes = axes.flatten()
 for i, filteredSignal in enumerate(filteredSample):
-    plt.plot(t, monoSignal, label="Original Signal")
-    plt.plot(t, filteredSignal, label=f"Bank {i+1}")
-    plt.title(f'Original Signal vs Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+    row, col = divmod(i, 4)
+    axes[i].plot(t, filteredSignal)
+    axes[i].set_title(f'Filtered Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+    axes[i].set_xlabel("Time [seconds]")
+    axes[i].set_ylabel("Amplitude")
+    axes[i].grid(True)
+plt.tight_layout()
+plt.show()
+
+# Task 7: Rectify each band by taking the abs value of the signal for each band
+recFilteredSample = [abs(sample) for sample in filteredSample]
+
+# Plot recFilteredSample signals
+# for i, rec in enumerate(recFilteredSample):
+#     plt.plot(t, rec)
+#     plt.title(f'Rectified Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+#     plt.xlabel("Time [seconds]")
+#     plt.ylabel("Amplitude")
+#     plt.grid(True)
+#     plt.tight_layout()
+#     plt.show()
+
+# Plot rectified signals all in the same figure
+fig, axes = plt.subplots(3, 4, figsize=(12, 8))
+axes = axes.flatten()
+for i, rectifiedSample in enumerate(recFilteredSample):
+    row, col = divmod(i, 4) 
+    axes[i].plot(t, rectifiedSample)
+    axes[i].set_title(f'Rectified Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+    axes[i].set_xlabel("Time [seconds]")
+    axes[i].set_ylabel("Amplitude")
+    axes[i].grid(True)
+plt.tight_layout()
+plt.show()
+
+# Task 8: Apply lowpass filter to recFilteredSample
+cutoffFrequency = 400
+envelope = [lfilter(*butter(4, cutoffFrequency / (fs / 2), btype='low', analog=False), sample) for sample in recFilteredSample]
+
+# Plot envelope signals
+for i, rec in enumerate(envelope):
+    plt.plot(t, rec)
+    plt.title(f'Lowpass Filter Rectified Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
     plt.xlabel("Time [seconds]")
     plt.ylabel("Amplitude")
     plt.grid(True)
@@ -174,6 +214,19 @@ for i, rec in enumerate(envelope):
     plt.grid(True)
     plt.tight_layout()
     plt.show()
+
+# Plot a comparison of all the signals of each band
+# for i in range(NFrequencyBands):
+#     plt.figure()
+#     plt.plot(t, filteredSample[i], label='filteredSample')
+#     plt.plot(t, recFilteredSample[i], label='recFilteredSample')
+#     plt.plot(t, envelope[i], label='envelope')
+#     plt.title(f"Band {i + 1} Comparison")
+#     plt.xlabel("Time [seconds]")
+#     plt.ylabel("Amplitude")
+#     plt.legend()
+#     plt.grid(True)
+#     plt.show()
 
 # Plot a comparison of all the signals of each band
 # for i in range(NFrequencyBands):
