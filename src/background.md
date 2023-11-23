@@ -120,6 +120,8 @@ $$ H(z) = \frac{B(z)}{A(z)} = \frac{\sum_{i=0}^{M} b[i] z^{-i}}{\sum_{i=0}^{N} a
     Where B and A are polynomial coefficients. You use convolution to apply a filter  
     the impulse response in this case is the sequence of FIR coefficients and x(t) is the signal.
 
+## Rectifying Signals:
+    Process in which all the negative portions of the signal are eliminated. There are two types of rectification: half-wave and full-wave. In half-wave, only the positive portion of the signal remains, and the negative portions are clipped to zero. A full-wave rectifier inverts all the negative portions so that the entire signal has positive values.
 ### Conclusion
 Hopefully this provides enough context to understand the filter code.  
 ***Of course feel free to reach out if you need help!***

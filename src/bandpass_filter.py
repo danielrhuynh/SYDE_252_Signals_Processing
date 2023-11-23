@@ -4,6 +4,7 @@ import matplotlib.pyplot  as plt
 import matlab.engine
 import sounddevice as sd
 
+
 eng = matlab.engine.start_matlab()
 
 # This is the sampling frequency we had from Phase 1
@@ -41,11 +42,11 @@ for i in range(NFrequencyBands):
     firCoeffs = firwin(numtaps=taps, cutoff=[lowCutoff, highCutoff], fs=fs, pass_zero=False, window=('kaiser', 0.9))
     filterBank.append(firCoeffs)
 
-samplePath = "./samples/sample1.mp3"
+samplePath = "../samples/sample4.mp3"
 
 # Using MATLAB's python engine to preprocess
-s = eng.genpath('api')
-d = eng.genpath('samples')
+s = eng.genpath('../api')
+d = eng.genpath('../samples')
 eng.addpath(s,nargout=0)
 eng.addpath(d,nargout=0)
 [monoSignal, sampleFreq] = eng.signals_processing(samplePath, nargout=2)
@@ -55,14 +56,76 @@ filteredSample = [lfilter(bandpassFilter, [1.0], monoSignal) for bandpassFilter 
 t = np.arange(len(monoSignal)) / sampleFreq
 
 # Plot filtered signals
-for i, filteredSignal in enumerate(filteredSample):
-    plt.plot(t, monoSignal, label="Original Signal")
-    plt.plot(t, filteredSignal, label=f"Bank {i+1}")
-    plt.title(f'Original Signal vs Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+for i, channel in enumerate(filteredSample):
+    plt.figure()
+    plt.plot(t, monoSignal, label='Original Signal', color='blue')
+    plt.plot(t, channel, label=f'Filtered Channel {i+1}', color='red')
+    plt.title(f'Original Signal and Filtered Channel {i+1}')
+    plt.xlabel('Time [seconds]')
+    plt.ylabel('Amplitude')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+# Task 7: Rectify each band by taking the abs value of the signal for each band
+recFilteredSample = [abs(sample) for sample in filteredSample]
+
+# Plot recFilteredSample signals
+# for i, rec in enumerate(recFilteredSample):
+#     plt.plot(t, rec)
+#     plt.title(f'Rectified Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+#     plt.xlabel("Time [seconds]")
+#     plt.ylabel("Amplitude")
+#     plt.grid(True)
+#     plt.tight_layout()
+#     plt.show()
+
+# Plot rectified signals all in the same figure
+# fig, axes = plt.subplots(3, 4, figsize=(12, 8))
+# axes = axes.flatten()
+# for i, rectifiedSample in enumerate(recFilteredSample):
+#     row, col = divmod(i, 4) 
+#     axes[i].plot(t, rectifiedSample)
+#     axes[i].set_title(f'Rectified Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+#     axes[i].set_xlabel("Time [seconds]")
+#     axes[i].set_ylabel("Amplitude")
+#     axes[i].grid(True)
+# plt.tight_layout()
+# plt.show()
+
+# Task 8: Apply lowpass filter to recFilteredSample. Coefficients found using the pyFDA GUI. Lowpass, FIR, Quiripple, Order N = 2, f_s = 1.6 kHz, f_PB = 0.4, f_SB = 0.5, A_PB = 1 [dB], A_SB = 60 [dB], W_pB = 1, W_SB = 1. 
+lowpassFilterCoefficients = [0.36161567304292236, 0.6383843269570776, 0.36161567304292236] #these are the b values (the numerator coefficient vector in a 1-D sequence)
+
+try:
+    envelopes = [lfilter(lowpassFilterCoefficients, [1.0], channel) for channel in recFilteredSample]
+except Exception as e:
+    print(f"An error occurred: {e}")
+
+# Plot envelope signals
+# fig, axes = plt.subplots(3, 4, figsize=(12, 8))
+# axes = axes.flatten()
+# for i, envelope in enumerate(envelopes):
+#     row, col = divmod(i, 4)
+#     axes[i].plot(t, envelope)
+#     axes[i].set_title(f'Filtered Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+#     axes[i].set_xlabel("Time [seconds]")
+#     axes[i].set_ylabel("Amplitude")
+#     axes[i].grid(True)
+# plt.tight_layout()
+# plt.show()
+
+# Plot a comparison of all the signals of each band
+for i in range(NFrequencyBands):
+    plt.figure()
+    plt.plot(t, monoSignal, label='Original Signal')
+    plt.plot(t, filteredSample[i], label='filteredSample')
+    plt.plot(t, recFilteredSample[i], label='recFilteredSample')
+    plt.plot(t, envelopes[i], label='envelope')
+    plt.title(f"Band {i + 1} Comparison")
     plt.xlabel("Time [seconds]")
     plt.ylabel("Amplitude")
+    plt.legend()
     plt.grid(True)
-    plt.tight_layout()
     plt.show()
 
 compositeSignal = np.sum(filteredSample, axis=0)
