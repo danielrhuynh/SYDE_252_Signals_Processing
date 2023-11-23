@@ -56,29 +56,16 @@ filteredSample = [lfilter(bandpassFilter, [1.0], monoSignal) for bandpassFilter 
 t = np.arange(len(monoSignal)) / sampleFreq
 
 # Plot filtered signals
-# for i, channel in enumerate(filteredSample):
-#     plt.figure()
-#     plt.plot(t, monoSignal, label='Original Signal', color='blue')
-#     plt.plot(t, channel, label=f'Filtered Channel {i+1}', color='red')
-#     plt.title(f'Original Signal and Filtered Channel {i+1}')
-#     plt.xlabel('Time [seconds]')
-#     plt.ylabel('Amplitude')
-#     plt.legend()
-#     plt.grid(True)
-#     plt.show()
-
-# Or plot all 12 on same figure
-# fig, axes = plt.subplots(3, 4, figsize=(12, 8))
-# axes = axes.flatten()
-# for i, filteredSignal in enumerate(filteredSample):
-#     row, col = divmod(i, 4)
-#     axes[i].plot(t, filteredSignal)
-#     axes[i].set_title(f'Filtered Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
-#     axes[i].set_xlabel("Time [seconds]")
-#     axes[i].set_ylabel("Amplitude")
-#     axes[i].grid(True)
-# plt.tight_layout()
-# plt.show()
+for i, channel in enumerate(filteredSample):
+    plt.figure()
+    plt.plot(t, monoSignal, label='Original Signal', color='blue')
+    plt.plot(t, channel, label=f'Filtered Channel {i+1}', color='red')
+    plt.title(f'Original Signal and Filtered Channel {i+1}')
+    plt.xlabel('Time [seconds]')
+    plt.ylabel('Amplitude')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 # Task 7: Rectify each band by taking the abs value of the signal for each band
 recFilteredSample = [abs(sample) for sample in filteredSample]
@@ -121,18 +108,6 @@ except Exception as e:
 #     row, col = divmod(i, 4)
 #     axes[i].plot(t, envelope)
 #     axes[i].set_title(f'Filtered Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
-#     axes[i].set_xlabel("Time [seconds]")
-#     axes[i].set_ylabel("Amplitude")
-#     axes[i].grid(True)
-# plt.tight_layout()
-# plt.show()
-
-# fig, axes = plt.subplots(3, 4, figsize=(12, 8))
-# axes = axes.flatten()
-# for i, envelope in enumerate(envelopes):
-#     row, col = divmod(i, 4) 
-#     axes[i].plot(t, envelope)
-#     axes[i].set_title(f'Evelope of Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
 #     axes[i].set_xlabel("Time [seconds]")
 #     axes[i].set_ylabel("Amplitude")
 #     axes[i].grid(True)
