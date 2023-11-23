@@ -28,6 +28,8 @@ function [monoSignal, Fs] = signals_processing(filename)
         Fs = 16000;
     end
 
+    disp(Fs);
+
     % 3.7
     % FREQ = 1000;
     % cosSignal = cos(2 * pi * FREQ * t);

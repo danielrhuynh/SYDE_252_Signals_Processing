@@ -30,17 +30,18 @@ for i in range(NFrequencyBands):
     lowCutoff = edges[i]
     highCutoff = edges[i+1]
 
+    # This is the order for the FIR filter
+    taps = 3
+
     # Needed to modify this according to Nyquist's theorem
     if highCutoff == fs/2:
         highCutoff *= 0.999
 
-    # This is the order for the FIR filter
-    taps = 3
-
-    firCoeffs = firwin(numtaps=taps, cutoff=[lowCutoff, highCutoff], fs=fs, pass_zero=False)
+    # Beta was decided through systematic experimentation
+    firCoeffs = firwin(numtaps=taps, cutoff=[lowCutoff, highCutoff], fs=fs, pass_zero=False, window=('kaiser', 0.9))
     filterBank.append(firCoeffs)
 
-samplePath = "./samples/sample4.mp3"
+samplePath = "./samples/sample1.mp3"
 
 # Using MATLAB's python engine to preprocess
 s = eng.genpath('api')
