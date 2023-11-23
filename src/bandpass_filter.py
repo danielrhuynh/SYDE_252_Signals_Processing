@@ -107,7 +107,7 @@ recFilteredSample = [abs(sample) for sample in filteredSample]
 # plt.show()
 
 # Task 8: Apply lowpass filter to recFilteredSample. Coefficients found using the pyFDA GUI. Lowpass, FIR, Quiripple, Order N = 2, f_s = 1.6 kHz, f_PB = 0.4, f_SB = 0.5, A_PB = 1 [dB], A_SB = 60 [dB], W_pB = 1, W_SB = 1. 
-lowpassFilterCoefficients = [0.36161567304292236, 0.6383843269570776, 0.36161567304292236]
+lowpassFilterCoefficients = [0.36161567304292236, 0.6383843269570776, 0.36161567304292236] #these are the b values (the numerator coefficient vector in a 1-D sequence)
 
 try:
     envelopes = [lfilter(lowpassFilterCoefficients, [1.0], channel) for channel in recFilteredSample]
