@@ -34,13 +34,13 @@ for i in range(NFrequencyBands):
     if highCutoff == fs/2:
         highCutoff *= 0.999
 
-    # This is the order for the FIR filter (odd for Type 1)
-    taps = 101
+    # This is the order for the FIR filter
+    taps = 3
 
-    firCoeffs = firwin(numtaps=taps, cutoff=[lowCutoff, highCutoff], fs=fs)
+    firCoeffs = firwin(numtaps=taps, cutoff=[lowCutoff, highCutoff], fs=fs, pass_zero=False)
     filterBank.append(firCoeffs)
 
-samplePath = "./samples/sample1.mp3"
+samplePath = "./samples/sample4.mp3"
 
 # Using MATLAB's python engine to preprocess
 s = eng.genpath('api')
@@ -53,18 +53,11 @@ filteredSample = [lfilter(bandpassFilter, [1.0], monoSignal) for bandpassFilter 
 
 t = np.arange(len(monoSignal)) / sampleFreq
 
-# Original Signal
-plt.plot(t, monoSignal)
-plt.title("Original Signal")
-plt.xlabel("Time [seconds]")
-plt.ylabel("Amplitude")
-plt.grid(True)
-plt.show()
-
 # Plot filtered signals
 for i, filteredSignal in enumerate(filteredSample):
-    plt.plot(t, filteredSignal)
-    plt.title(f'Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
+    plt.plot(t, monoSignal, label="Original Signal")
+    plt.plot(t, filteredSignal, label=f"Bank {i+1}")
+    plt.title(f'Original Signal vs Band {i+1}: {edges[i]:.0f} - {edges[i+1]:.0f} Hz')
     plt.xlabel("Time [seconds]")
     plt.ylabel("Amplitude")
     plt.grid(True)

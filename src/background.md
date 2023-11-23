@@ -45,6 +45,24 @@ We are using a FIR Filter for the following reasons:
     We apply a window function to the truncated impulse response which smooths the impulse  
     response near its end to 0. The result of windowing to the ideal truncated impulse response  
     are the FIR coefficients.
+
+### More on FIRs Specific to this Project
+    Alright, so what I found out by messing around (say systematic experimentation in the report)  
+    is that introducing a higher filter order increases sharpness meaning you can more sharply  
+    transition from the passband to the stopband but will increase attenuation (lowers the magnitude a lot)  
+    At the filter order we had before (really any order greater than 5) we attenuate way too much removing  
+    much of the signal. At higher orders, the phase frequency response also becomes non-linear which is not good (look up why  
+    but basically this introduces group delay which introduces distortion). I changed the filter order to 3 which attenuates much  less and filters out an appropriate amount of noise as viewed by the generated graph.
+
+**Lets talk about the difference between even and odd orders and overshooting:**  
+    Even orders are not symmetrical since they don't have a middle tap to center themselves around.  
+    This leads to unpredictable behaviour since the group delay tends to be a non-integer and a non-linear  
+    phase response which eliminates a major advantage of a FIR filter.
+    Odd orders are symmetrical and are more stable and predictable due to the ensured linear phase response.  
+    This means that the filter introduces a constant delay across all signals.  
+    Even orders lead to overshooting at higher passbands which is undesirable because it leads to distortion and deviates  
+    from the original signal.
+
 ## Zero / Pole / Gain form:
     This is a way of describing an LTI system in terms of their zeros, poles and gain.  
     Zeros are the frequencies where the systems output is 0 regardless of the input. (Roots of numerator)  
@@ -68,8 +86,6 @@ We are using a FIR Filter for the following reasons:
 $$ H(z) = \frac{B(z)}{A(z)} = \frac{\sum_{i=0}^{M} b[i] z^{-i}}{\sum_{i=0}^{N} a[i] z^{-i}} $$
     Where B and A are polynomial coefficients. You use convolution to apply a filter  
     the impulse response in this case is the sequence of FIR coefficients and x(t) is the signal.
-
-
 
 ### Conclusion
 Hopefully this provides enough context to understand the filter.  
