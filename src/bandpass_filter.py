@@ -3,7 +3,6 @@ from scipy.signal import firwin, lfilter
 import matplotlib.pyplot  as plt
 import matlab.engine
 import sounddevice as sd
-import math
 
 eng = matlab.engine.start_matlab()
 
@@ -127,24 +126,5 @@ except Exception as e:
 #     plt.legend()
 #     plt.grid(True)
 #     plt.show()
-
-res = []
-# Task 10
-for i in range(len(filterBank)):
-    centralFreq = math.sqrt(edges[i]*edges[i+1])
-    
-    t = np.arange(len(envelopes[i]))/sampleFreq
-    cosSignal = np.cos(2*math.pi*centralFreq*t)
-    
-    # Task 11
-    modulatedSignal = cosSignal * envelopes[i]
-    res.append(modulatedSignal)
-
-compositeSignal = np.sum(res, axis=0)
-
-compositeSignal /= np.max(np.abs(compositeSignal))
-
-sd.play(compositeSignal, sampleFreq)
-sd.wait()
 
 eng.quit()
