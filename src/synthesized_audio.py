@@ -1,10 +1,8 @@
-# Get filteredSample and envelopes from bancpass_filter.py
-from bandpass_filter import filterBank, edges, sampleFreq, envelopes, recFilteredSample
+from bandpass_filter import filterBank, edges, sampleFreq, envelopes, samplePath
 import numpy as np
-import matplotlib.pyplot as plt
 import math
 import sounddevice as sd
-import math
+from scipy.io.wavfile import write
 
 # Task 10
 res = []
@@ -25,15 +23,10 @@ compositeSignal = np.sum(res, axis=0)
 
 compositeSignal /= np.max(np.abs(compositeSignal))
 
+fileName = samplePath.split('/')[-1].split('.')[0]
+
 # Task 13
+write(f"../samples/synthesized{fileName}.wav", int(sampleFreq), compositeSignal)
+
 sd.play(compositeSignal, sampleFreq)
 sd.wait()
-
-
-
-
-
-
-    
-
-
