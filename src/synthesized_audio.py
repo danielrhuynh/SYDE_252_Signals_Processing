@@ -26,7 +26,9 @@ compositeSignal /= np.max(np.abs(compositeSignal))
 fileName = samplePath.split('/')[-1].split('.')[0]
 
 # Task 13
-write(f"../samples/synthesized{fileName}.wav", int(sampleFreq), compositeSignal)
+write(f"../samples/synthesized{fileName}.mp3", int(sampleFreq), compositeSignal)
 
+print("Playing synthesized audio...")
 sd.play(compositeSignal, sampleFreq)
 sd.wait()
+print("Done!")

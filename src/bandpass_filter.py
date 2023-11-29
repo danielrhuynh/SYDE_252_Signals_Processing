@@ -15,7 +15,7 @@ lowFreq = 100
 highFreq = 8000
 
 # Chosen from lectures
-NFrequencyBands = 12
+NFrequencyBands = 3
 
 # Create the edges of the frequency bands
 edges = []
