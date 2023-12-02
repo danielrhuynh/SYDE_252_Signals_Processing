@@ -4,7 +4,6 @@ import matplotlib.pyplot  as plt
 import matlab.engine
 import sounddevice as sd
 
-
 eng = matlab.engine.start_matlab()
 
 # This is the sampling frequency we had from Phase 1
@@ -16,7 +15,7 @@ lowFreq = 100
 highFreq = 8000
 
 # Chosen from lectures
-NFrequencyBands = 12
+NFrequencyBands = 3
 
 # Create the edges of the frequency bands
 edges = []
@@ -56,16 +55,16 @@ filteredSample = [lfilter(bandpassFilter, [1.0], monoSignal) for bandpassFilter 
 t = np.arange(len(monoSignal)) / sampleFreq
 
 # Plot filtered signals
-for i, channel in enumerate(filteredSample):
-    plt.figure()
-    plt.plot(t, monoSignal, label='Original Signal', color='blue')
-    plt.plot(t, channel, label=f'Filtered Channel {i+1}', color='red')
-    plt.title(f'Original Signal and Filtered Channel {i+1}')
-    plt.xlabel('Time [seconds]')
-    plt.ylabel('Amplitude')
-    plt.legend()
-    plt.grid(True)
-    plt.show()
+# for i, channel in enumerate(filteredSample):
+#     plt.figure()
+#     plt.plot(t, monoSignal, label='Original Signal', color='blue')
+#     plt.plot(t, channel, label=f'Filtered Channel {i+1}', color='red')
+#     plt.title(f'Original Signal and Filtered Channel {i+1}')
+#     plt.xlabel('Time [seconds]')
+#     plt.ylabel('Amplitude')
+#     plt.legend()
+#     plt.grid(True)
+#     plt.show()
 
 # Task 7: Rectify each band by taking the abs value of the signal for each band
 recFilteredSample = [abs(sample) for sample in filteredSample]
@@ -115,27 +114,17 @@ except Exception as e:
 # plt.show()
 
 # Plot a comparison of all the signals of each band
-for i in range(NFrequencyBands):
-    plt.figure()
-    plt.plot(t, monoSignal, label='Original Signal')
-    plt.plot(t, filteredSample[i], label='filteredSample')
-    plt.plot(t, recFilteredSample[i], label='recFilteredSample')
-    plt.plot(t, envelopes[i], label='envelope')
-    plt.title(f"Band {i + 1} Comparison")
-    plt.xlabel("Time [seconds]")
-    plt.ylabel("Amplitude")
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-
-compositeSignal = np.sum(filteredSample, axis=0)
-
-# Normalizing signal to avoid clipping
-compositeSignal /= np.max(np.abs(compositeSignal))
-                         
-# Playing the composite signal
-print("Playing composite signal...")
-sd.play(compositeSignal, sampleFreq)
-sd.wait()
+# for i in range(NFrequencyBands):
+#     plt.figure()
+#     plt.plot(t, monoSignal, label='Original Signal')
+#     plt.plot(t, filteredSample[i], label='filteredSample')
+#     plt.plot(t, recFilteredSample[i], label='recFilteredSample')
+#     plt.plot(t, envelopes[i], label='envelope')
+#     plt.title(f"Band {i + 1} Comparison")
+#     plt.xlabel("Time [seconds]")
+#     plt.ylabel("Amplitude")
+#     plt.legend()
+#     plt.grid(True)
+#     plt.show()
 
 eng.quit()
