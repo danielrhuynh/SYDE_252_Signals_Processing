@@ -1,7 +1,7 @@
 clearvars;
 close all;
 
-filename = ['/Users/chelseadmytryk/Documents/MATLAB/SYDE_252_Signals_Processing/samples/sample1.mp3'];
+filename = ['samples/sample1.mp3'];
 [f, fs] = audioread(filename); % y is the signal read into MATLAB, Fs is the sampling frequency of the signal y
 % y is a 2D matrix. Col 1 is the left channel and col 2 is the right channel
 y = f;
@@ -46,7 +46,7 @@ compositeSignal = res / max(abs(res));
 compositeSignal = compositeSignal / max(abs(compositeSignal));
 
 % Choose a file name and path for the new audio file
-outputFilePath = '/Users/chelseadmytryk/Documents/MATLAB/SYDE_252_Signals_Processing/samples/synthesized_audio4.wav';  % Specify your desired file path and name
+outputFilePath = 'samples/synthesized_audio4.wav';  % Specify your desired file path and name
 % Write the audio to a new file
 audiowrite(outputFilePath, compositeSignal, Fs);  % Specify the correct sample rate
 
